@@ -1,7 +1,7 @@
 const express = require('express');
 const https = require('https');
 const app = express();
-const port = 3000;
+const port = process.env.port;
 
 app.get('/', (req, res) => res.send('Hello World'));
 app.get('/cat-facts/', (req, res) => {

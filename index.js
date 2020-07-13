@@ -19,7 +19,3 @@ app.get('/cat-facts/', (req, res) => {
 }); 
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
-
-function processCatFacts(req, res) {
-
-}

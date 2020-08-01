@@ -37,7 +37,7 @@ app.get('/nice', (req, res) => {
     ps.on('channel-points', (data) => {
         if (data.reward.id === '8bfd8f73-7068-422d-89e8-408fd3102d89') {
             console.log(`sending 'nice' from ${data.user.display_name}`);
-            res.write(`${data.redemption.user.display_name}\n`);
+            res.write(`${data.redemption.user.display_name}\n\n`);
         }
     });
     

@@ -45,6 +45,11 @@ app.get('/nice', (req, res) => {
         console.log('client dropped me');
         res.end();
     });
+
+    res.on('error', err => {
+        console.log(err);
+        res.end();
+    })
 });
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))

@@ -36,15 +36,21 @@ app.get('/nice', (req, res) => {
             res.write('data: ' + data.redemption.user.display_name + '\n\n');
         }
     });
+
+    var interval = setInterval(() => {
+        res.write('data: ++ping++');
+    }, 50000)
     
     res.on('close', () => {
         console.log('client dropped me');
         res.end();
+        clearInterval(interval);
     });
 
     res.on('error', err => {
         console.log(err);
         res.end();
+        clearInterval(interval);
     });
 
     

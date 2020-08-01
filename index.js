@@ -48,7 +48,7 @@ app.get('/nice', (req, res) => {
         res.end();
     });
 
-    res.
+    
 });
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))

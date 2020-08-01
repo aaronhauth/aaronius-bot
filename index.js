@@ -38,6 +38,7 @@ app.get('/nice', (req, res) => {
     });
 
     var interval = setInterval(() => {
+        console.log('sending ping');
         res.write('data: ++ping++');
     }, 50000)
     

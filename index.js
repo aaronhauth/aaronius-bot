@@ -3,7 +3,6 @@ const https = require('https');
 const twitchPs = require('twitchps');
 const { runInNewContext } = require('vm');
 const app = express();
-console.log(process);
 const port = process.env.PORT
 
 let init_topics = [{topic: `video-playback.${process.env.userName}`}, {topic: `channel-points-channel-v1.${process.env.userId}`,  token: `${process.env.token}`}];

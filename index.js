@@ -29,6 +29,7 @@ app.get('/cat-facts/', (req, res) => {
 }); 
 app.get('/nice', (req, res) => {
     res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('connection', 'keep-alive');
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.flushHeaders(); // flush the headers to establish SSE with client

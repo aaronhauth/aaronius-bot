@@ -31,13 +31,13 @@ app.get('/nice', (req, res) => {
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('connection', 'keep-alive');
     res.setHeader('Content-Type', 'text/event-stream');
-    // res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.flushHeaders(); // flush the headers to establish SSE with client
 
     ps.on('channel-points', (data) => {
         if (data.reward.id === '8bfd8f73-7068-422d-89e8-408fd3102d89') {
             console.log(`sending 'nice' from ${data.user.display_name}`);
-            res.write('data:' + data.redemption.user.display_name + '\n');
+            res.write(data.redemption.user.display_name + '\n\n');
         }
     });
     

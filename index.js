@@ -6,7 +6,7 @@ const app = express();
 console.log(process);
 const port = process.env.PORT
 
-let init_topics = [{topic: 'video-playback.aaroniush'}, {topic: 'channel-points-channel-v1.43658519',  token: 'xspuijgr5ghqsuila5o82tq31h4trw'}];
+let init_topics = [{topic: `video-playback.${process.env.userName}`}, {topic: `channel-points-channel-v1.${process.env.userId}`,  token: `${process.env.token}`}];
 var ps = new twitchPs({reconnect: false, init_topics: init_topics, debug: true});
 console.log(process.env.PORT);
 

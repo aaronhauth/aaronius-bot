@@ -63,7 +63,7 @@ app.get('/nice', (req, res) => {
             console.log(`sending 'nice' from ${data.redemption.user.display_name}`);
             res.write('data: ' + data.redemption.user.display_name + '\n\n');
         } else {
-            const redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;
+            let redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;
             redeemMessage += data.reward.is_user_input_required ? `with message ${data.user_input}` : ".";
             chatClient.say(chatTarget, redeemMessage);
         }

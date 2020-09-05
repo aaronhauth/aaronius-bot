@@ -10,7 +10,7 @@ const port = process.env.PORT
 const opts = {
     identity: {
         username: process.env.userName,
-        password: process.env.token
+        password: process.env.token2
     },
     channels: [
         process.env.userName

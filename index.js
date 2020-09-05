@@ -65,7 +65,9 @@ app.get('/nice', (req, res) => {
         } else {
             let redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;
             redeemMessage += data.reward.is_user_input_required ? `with message ${data.user_input}` : ".";
-            chatClient.say(chatTarget, redeemMessage);
+            if (chatTarget) {
+                chatClient.say(chatTarget, redeemMessage);
+            }
         }
     });
 

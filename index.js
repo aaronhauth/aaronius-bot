@@ -23,6 +23,9 @@ let chatTarget = null;
 chatClient.on('message', (target, context, msg, self) => {
     // things to do when a message sends
     if (!chatTarget) chatTarget = target;
+    if (self) return;
+
+    chatClient.say(chatTarget, msg);
 });
 chatClient.on('connected', (addr, port) => {
     console.log(`* Connected to ${addr}:${port}`);

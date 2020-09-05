@@ -27,7 +27,7 @@ chatClient.on('message', (target, context, msg, self) => {
 
     let yourMom = /^your (mom|face)/gi
     if (yourMom.test(msg)) {
-        chatClient.say(target, "/me no u")
+        chatClient.say(target, `/me @${context.username} no u`);
     }
 });
 chatClient.on('connected', (addr, port) => {

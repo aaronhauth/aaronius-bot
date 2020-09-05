@@ -20,15 +20,12 @@ const opts = {
 // create a client with our options
 const chatClient = new tmi.client(opts);
 let chatTarget = null;
+// this chat client really only works in the context of a single channel (mine, at the moment)
+// we initialize our chatTarget so that our redemption bot can have a channel to send our messages to. Otherwise, we don't care too much about this thing here.
 chatClient.on('message', (target, context, msg, self) => {
     // things to do when a message sends
     if (!chatTarget) chatTarget = target;
     if (self) return;
-
-    let yourMom = /^your (mom|face)/gi
-    if (yourMom.test(msg)) {
-        chatClient.say(target, `/me @${context.username} no u`);
-    }
 });
 chatClient.on('connected', (addr, port) => {
     console.log(`* Connected to ${addr}:${port}`);
@@ -66,6 +63,7 @@ app.get('/nice', (req, res) => {
             console.log(`sending 'nice' from ${data.redemption.user.display_name}`);
             res.write('data: ' + data.redemption.user.display_name + '\n\n');
         } else {
+            // if we're able to send messages at the moment outside of the context of 
             let redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;
             redeemMessage += data.reward.is_user_input_required ? `with message ${data.user_input}` : ".";
             if (chatTarget) {

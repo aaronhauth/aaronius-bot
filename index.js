@@ -25,7 +25,10 @@ chatClient.on('message', (target, context, msg, self) => {
     if (!chatTarget) chatTarget = target;
     if (self) return;
 
-    chatClient.say(chatTarget, msg);
+    let yourMom = /^your (mom|face)/gi
+    if (yourMom.test(msg)) {
+        chatClient.say(target, "/me no u")
+    }
 });
 chatClient.on('connected', (addr, port) => {
     console.log(`* Connected to ${addr}:${port}`);

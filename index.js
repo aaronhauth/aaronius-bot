@@ -59,13 +59,14 @@ app.get('/nice', (req, res) => {
     res.flushHeaders(); // flush the headers to establish SSE with client
 
     ps.on('channel-points', (data) => {
+        console.log('processing redemption ' + data.reward.title + ' with id ' + data.reward.id);
         if (data.reward.id === '8bfd8f73-7068-422d-89e8-408fd3102d89') {
             console.log(`sending 'nice' from ${data.redemption.user.display_name}`);
             res.write('data: ' + data.redemption.user.display_name + '\n\n');
         } else {
             // if we're able to send messages at the moment outside of the context of 
             let redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;
-            redeemMessage += data.reward.is_user_input_required ? `with message ${data.user_input}` : ".";
+            redeemMessage += data.reward.is_user_input_required ? ` with message ${data.user_input}` : ".";
             if (chatTarget) {
                 chatClient.say(chatTarget, redeemMessage);
             }

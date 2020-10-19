@@ -62,7 +62,10 @@ app.get('/nice', (req, res) => {
         console.log('processing redemption ' + data.reward.title + ' with id ' + data.reward.id);
         if (data.reward.id === '8bfd8f73-7068-422d-89e8-408fd3102d89') {
             console.log(`sending 'nice' from ${data.redemption.user.display_name}`);
-            res.write('data: ' + data.redemption.user.display_name + '\n\n');
+            res.write('data: ' + `{"name": "${data.redemption.user.display_name}", "type": "nice"}` + '\n\n');
+        } else if (data.reward.id === 'c1e0dd1a-8f95-4807-98dc-c69364bc4872') {
+            console.log(`sending 'VERY nice' from ${data.redemption.user.display_name}`);
+            res.write('data: ' + `{"name": "${data.redemption.user.display_name}", "type": "veryNice"}` + '\n\n');
         } else {
             // if we're able to send messages at the moment outside of the context of 
             let redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;

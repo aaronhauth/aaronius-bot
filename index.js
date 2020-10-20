@@ -9,7 +9,7 @@ const port = process.env.PORT
 // chatbot options
 const opts = {
     identity: {
-        username: process.env.userName,
+        username: process.env.botName,
         password: process.env.token2
     },
     channels: [

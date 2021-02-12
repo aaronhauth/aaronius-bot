@@ -93,12 +93,14 @@ app.get('/nice', (req, res) => {
 ps.on('channel-points', (data) => {
     console.log(data.reward.id);
     if (data.reward.id === '691d3fbf-812d-4a19-b27b-e978d4a46e7e') {
+        console.log('starting request for a dad joke')
         https.get('https://icanhazdadjoke.com/', (resp) => {
             let data = '';
             resp.on('data', chunk => {
                 data += chunk;
             });
             resp.on('end', () => {
+                console.log(data)
                 const json = JSON.parse(data)
                 if (chatTarget) {
                     chatClient.say(chatTarget, json);

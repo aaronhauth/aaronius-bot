@@ -98,7 +98,7 @@ ps.on('channel-points', (data) => {
             host: 'https://icanhazdadjoke.com/',
             headers: 'Accept: application/json'
         }
-        https.get('https://icanhazdadjoke.com/', (resp) => {
+        https.get(options, (resp) => {
             let data = '';
             resp.on('data', chunk => {
                 data += chunk;

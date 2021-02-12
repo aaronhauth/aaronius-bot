@@ -92,7 +92,7 @@ app.get('/nice', (req, res) => {
 // these are just standard channel point redemptions i want my bot to process. Might just be api calls and stuff...
 ps.on('channel-points', (data) => {
     console.log(data.reward.id);
-    if (data.reward.id === 'fcc926bd-0c3f-4ba4-8ab7-467b7e7eb02b') {
+    if (data.reward.id === '68778a6a-14ee-4e10-a1e8-2f95094641d3') {
         console.log('starting request for a dad joke')
         https.get('https://icanhazdadjoke.com/', (resp) => {
             let data = '';

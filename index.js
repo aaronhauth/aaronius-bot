@@ -115,7 +115,7 @@ ps.on('channel-points', (event) => {
                 }
             })
         });
-    } else {
+    } else if (data.reward.id !== '8bfd8f73-7068-422d-89e8-408fd3102d89' && data.reward.id !== 'c1e0dd1a-8f95-4807-98dc-c69364bc4872') {
 
         // if we're able to send messages at the moment outside of the context of 
         let redeemMessage = `/me @${event.redemption.user.display_name} redeemed ${event.reward.title}`;

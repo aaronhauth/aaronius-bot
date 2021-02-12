@@ -95,7 +95,7 @@ ps.on('channel-points', (data) => {
     if (data.reward.id === '68778a6a-14ee-4e10-a1e8-2f95094641d3') {
         console.log('starting request for a dad joke')
         const options = {
-            host: 'icanhazdadjoke.com/',
+            host: 'icanhazdadjoke.com',
             headers: {
                 'Accept': 'application/json',
                 'User-Agent': 'AaroniusH twitch bot'

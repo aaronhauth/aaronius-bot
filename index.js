@@ -111,14 +111,14 @@ ps.on('channel-points', (data) => {
                 const json = JSON.parse(data)
                 if (chatTarget) {
                     chatClient.say(chatTarget, json.joke);
-                    chatClient.say(chatTarget, `you can thank @${data.redemption.user.display_name} for that one`);
+                    chatClient.say(chatTarget, `you can thank @${data.user.display_name} for that one`);
                 }
             })
         });
     } else {
 
         // if we're able to send messages at the moment outside of the context of 
-        let redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;
+        let redeemMessage = `/me @${data.user.display_name} redeemed ${data.reward.title}`;
         redeemMessage += data.reward.is_user_input_required ? ` with message ${data.user_input}` : ".";
         if (chatTarget) {
             chatClient.say(chatTarget, redeemMessage);

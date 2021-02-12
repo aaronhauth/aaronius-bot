@@ -66,13 +66,6 @@ app.get('/nice', (req, res) => {
         } else if (data.reward.id === 'c1e0dd1a-8f95-4807-98dc-c69364bc4872') {
             console.log(`sending 'VERY nice' from ${data.redemption.user.display_name}`);
             res.write('data: ' + `{"name": "${data.redemption.user.display_name}", "type": "veryNice"}` + '\n\n');
-        } else {
-            // if we're able to send messages at the moment outside of the context of 
-            let redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;
-            redeemMessage += data.reward.is_user_input_required ? ` with message ${data.user_input}` : ".";
-            if (chatTarget) {
-                chatClient.say(chatTarget, redeemMessage);
-            }
         }
     });
 
@@ -95,5 +88,16 @@ app.get('/nice', (req, res) => {
 
     
 });
+
+// these are just standard channel point redemptions i want my bot to process. Might just be api calls and stuff...
+ps.on('channel-points', (data) => {
+    console.log(data.reward.id);
+    // if we're able to send messages at the moment outside of the context of 
+    let redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;
+    redeemMessage += data.reward.is_user_input_required ? ` with message ${data.user_input}` : ".";
+    if (chatTarget) {
+        chatClient.say(chatTarget, redeemMessage);
+    }
+})
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))

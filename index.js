@@ -110,7 +110,7 @@ ps.on('channel-points', (data) => {
                 console.log(data)
                 const json = JSON.parse(data)
                 if (chatTarget) {
-                    chatClient.say(chatTarget, json);
+                    chatClient.say(chatTarget, json.joke);
                 }
             })
         });

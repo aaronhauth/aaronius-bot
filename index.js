@@ -111,6 +111,7 @@ ps.on('channel-points', (data) => {
                 const json = JSON.parse(data)
                 if (chatTarget) {
                     chatClient.say(chatTarget, json.joke);
+                    chatClient.say(chatTarget, `you can thank @${data.user.display_name} for that one`);
                 }
             })
         });

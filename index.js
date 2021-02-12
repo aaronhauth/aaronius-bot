@@ -90,9 +90,9 @@ app.get('/nice', (req, res) => {
 });
 
 // these are just standard channel point redemptions i want my bot to process. Might just be api calls and stuff...
-ps.on('channel-points', (data) => {
-    console.log(data.reward.id);
-    if (data.reward.id === '68778a6a-14ee-4e10-a1e8-2f95094641d3') {
+ps.on('channel-points', (event) => {
+    console.log(event.reward.id);
+    if (event.reward.id === '68778a6a-14ee-4e10-a1e8-2f95094641d3') {
         console.log('starting request for a dad joke')
         const options = {
             host: 'icanhazdadjoke.com',
@@ -111,15 +111,15 @@ ps.on('channel-points', (data) => {
                 const json = JSON.parse(data)
                 if (chatTarget) {
                     chatClient.say(chatTarget, json.joke);
-                    chatClient.say(chatTarget, `you can thank @${data.user.display_name} for that one`);
+                    chatClient.say(chatTarget, `you can thank @${event.user.display_name} for that one`);
                 }
             })
         });
     } else {
 
         // if we're able to send messages at the moment outside of the context of 
-        let redeemMessage = `/me @${data.user.display_name} redeemed ${data.reward.title}`;
-        redeemMessage += data.reward.is_user_input_required ? ` with message ${data.user_input}` : ".";
+        let redeemMessage = `/me @${event.redemption.user.display_name} redeemed ${event.reward.title}`;
+        redeemMessage += event.reward.is_user_input_required ? ` with message ${event.user_input}` : ".";
         if (chatTarget) {
             chatClient.say(chatTarget, redeemMessage);
         }

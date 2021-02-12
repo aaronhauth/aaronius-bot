@@ -92,11 +92,27 @@ app.get('/nice', (req, res) => {
 // these are just standard channel point redemptions i want my bot to process. Might just be api calls and stuff...
 ps.on('channel-points', (data) => {
     console.log(data.reward.id);
-    // if we're able to send messages at the moment outside of the context of 
-    let redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;
-    redeemMessage += data.reward.is_user_input_required ? ` with message ${data.user_input}` : ".";
-    if (chatTarget) {
-        chatClient.say(chatTarget, redeemMessage);
+    if (data.reward.id === '8bfd8f73-7068-422d-89e8-408fd3102d89') {
+        https.get('https://icanhazdadjoke.com/', (resp) => {
+            let data = '';
+            resp.on('data', chunk => {
+                data += chunk;
+            });
+            resp.on('end', () => {
+                const json = JSON.parse(data)
+                if (chatTarget) {
+                    chatClient.say(chatTarget, json);
+                }
+            })
+        });
+    } else {
+
+        // if we're able to send messages at the moment outside of the context of 
+        let redeemMessage = `/me @${data.redemption.user.display_name} redeemed ${data.reward.title}`;
+        redeemMessage += data.reward.is_user_input_required ? ` with message ${data.user_input}` : ".";
+        if (chatTarget) {
+            chatClient.say(chatTarget, redeemMessage);
+        }
     }
 })
 

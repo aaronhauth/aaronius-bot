@@ -51,6 +51,9 @@ app.get('/cat-facts/', (req, res) => {
     });
 
 }); 
+app.get('/ping', (req, res) => {
+    res.end();
+})
 app.get('/nice', (req, res) => {
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('connection', 'keep-alive');

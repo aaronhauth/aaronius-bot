@@ -34,7 +34,6 @@ chatClient.on('message', (target, context, msg, self) => {
     if (self) return;
 });
 
-chatClient.connect();
 
 let init_topics = [{topic: `video-playback.${process.env.userName}`}, {topic: `channel-points-channel-v1.${process.env.userId}`,  token: `${process.env.token}`}];
 var ps = new twitchPs({reconnect: false, init_topics: init_topics, debug: true});

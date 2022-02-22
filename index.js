@@ -24,7 +24,7 @@ const opts = {
 
 // create a client with our options
 const chatClient = new tmi.client(opts);
-client.connect().catch(console.error);
+chatClient.connect().catch(console.error);
 let chatTarget = null;
 // this chat client really only works in the context of a single channel (mine, at the moment)
 // we initialize our chatTarget so that our redemption bot can have a channel to send our messages to. Otherwise, we don't care too much about this thing here.

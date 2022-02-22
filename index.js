@@ -22,6 +22,8 @@ const opts = {
     ]
 }
 
+console.log(opts);
+
 // create a client with our options
 const chatClient = new tmi.client(opts);
 chatClient.connect().catch(console.error);

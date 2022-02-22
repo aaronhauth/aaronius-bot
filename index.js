@@ -8,9 +8,14 @@ const port = process.env.PORT
 
 // chatbot options
 const opts = {
+    options: {debug: true, messagesLogLevel: 'info'},
+    connection: {
+        reconnect: true,
+        secure: true
+    },
     identity: {
         username: process.env.botName,
-        password: process.env.token2
+        password: 'oauth:' + process.env.token2
     },
     channels: [
         process.env.userName
@@ -19,6 +24,7 @@ const opts = {
 
 // create a client with our options
 const chatClient = new tmi.client(opts);
+client.connect().catch(console.error);
 let chatTarget = null;
 // this chat client really only works in the context of a single channel (mine, at the moment)
 // we initialize our chatTarget so that our redemption bot can have a channel to send our messages to. Otherwise, we don't care too much about this thing here.
@@ -26,9 +32,6 @@ chatClient.on('message', (target, context, msg, self) => {
     // things to do when a message sends
     if (!chatTarget) chatTarget = target;
     if (self) return;
-});
-chatClient.on('connected', (addr, port) => {
-    console.log(`* Connected to ${addr}:${port}`);
 });
 
 chatClient.connect();

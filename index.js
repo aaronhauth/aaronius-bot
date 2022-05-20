@@ -7,6 +7,8 @@ const { client } = require('tmi.js');
 const app = express();
 const port = process.env.PORT
 
+console.log(process.env);
+
 // chatbot options
 const opts = {
     options: {debug: true, messagesLogLevel: 'info'},

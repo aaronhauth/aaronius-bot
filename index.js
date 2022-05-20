@@ -15,7 +15,7 @@ const opts = {
     },
     identity: {
         username: process.env.botName,
-        password: 'oauth:' + process.env.token2
+        password: 'oauth:' + process.env.chatBotToken
     },
     channels: [
         process.env.userName
@@ -37,7 +37,7 @@ chatClient.on('message', (target, context, msg, self) => {
 });
 
 
-let init_topics = [{topic: `video-playback.${process.env.userName}`}, {topic: `channel-points-channel-v1.${process.env.userId}`,  token: `${process.env.token}`}];
+let init_topics = [{topic: `video-playback.${process.env.userName}`}, {topic: `channel-points-channel-v1.${process.env.userId}`,  token: `${process.env.pubSubToken}`}];
 var ps = new twitchPs({reconnect: false, init_topics: init_topics, debug: true});
 console.log(process.env.PORT);
 

@@ -3,6 +3,7 @@ const https = require('https');
 const twitchPs = require('twitchps');
 const { runInNewContext } = require('vm');
 const tmi = require('tmi.js');
+const { client } = require('tmi.js');
 const app = express();
 const port = process.env.PORT
 
@@ -27,14 +28,37 @@ console.log(opts);
 // create a client with our options
 const chatClient = new tmi.client(opts);
 chatClient.connect().catch(console.error);
-let chatTarget = null;
+let channel = null;
+
+const messageFrequencyFactor = 30;
+const ussyfiedWordFrequencyFactor = 4;
+
 // this chat client really only works in the context of a single channel (mine, at the moment)
 // we initialize our chatTarget so that our redemption bot can have a channel to send our messages to. Otherwise, we don't care too much about this thing here.
-chatClient.on('message', (target, context, msg, self) => {
-    // things to do when a message sends
-    if (!chatTarget) chatTarget = target;
+chatClient.on('message', (target, tags, msg, self) => {
     if (self) return;
+
+    // if we hit the odds of ussyfying a word:
+    if (Math.floor(Math.random()*messageFrequencyFactor) === 0) {
+        const words = msg.split(' ');
+        for (let word of words) {
+            if (Math.floor(Math.random()*ussyfiedWordFrequencyFactor) === 0) {
+                const syllables = word.match(syllableRegex);
+                syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + 'ussy';
+                word = syllables.join();
+            }
+        }
+        client.say(target, words.join(' '));
+    } 
+
+    // things to do when a message sends
+    if (!channel) channel = target;
 });
+
+const syllableRegex = /[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]))?/gi;
+function syllabify(words) {
+    return words.match(syllableRegex);
+}
 
 
 let init_topics = [{topic: `video-playback.${process.env.userName}`}, {topic: `channel-points-channel-v1.${process.env.userId}`,  token: `${process.env.pubSubToken}`}];
@@ -116,9 +140,9 @@ ps.on('channel-points', (event) => {
             resp.on('end', () => {
                 console.log(data)
                 const json = JSON.parse(data)
-                if (chatTarget) {
-                    chatClient.say(chatTarget, json.joke);
-                    chatClient.say(chatTarget, `you can thank @${event.redemption.user.display_name} for that one`);
+                if (channel) {
+                    chatClient.say(channel, json.joke);
+                    chatClient.say(channel, `you can thank @${event.redemption.user.display_name} for that one.`);
                 }
             })
         });
@@ -127,8 +151,8 @@ ps.on('channel-points', (event) => {
         // if we're able to send messages at the moment outside of the context of 
         let redeemMessage = `/me @${event.redemption.user.display_name} redeemed ${event.reward.title}`;
         redeemMessage += event.reward.is_user_input_required ? ` with message ${event.user_input}` : ".";
-        if (chatTarget) {
-            chatClient.say(chatTarget, redeemMessage);
+        if (channel) {
+            chatClient.say(channel, redeemMessage);
         }
     }
 })

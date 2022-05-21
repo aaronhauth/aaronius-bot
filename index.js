@@ -32,7 +32,7 @@ const chatClient = new tmi.client(opts);
 chatClient.connect().catch(console.error);
 let channel = null;
 
-const messageFrequencyFactor = 30;
+const messageFrequencyFactor = 5;
 const ussyfiedWordFrequencyFactor = 4;
 
 // this chat client really only works in the context of a single channel (mine, at the moment)
@@ -50,7 +50,7 @@ chatClient.on('message', (target, tags, msg, self) => {
                 word = syllables.join();
             }
         }
-        client.say(target, words.join(' '));
+        chatClient.say(target, words.join(' '));
     } 
 
     // things to do when a message sends

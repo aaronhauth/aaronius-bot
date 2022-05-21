@@ -49,6 +49,8 @@ chatClient.on('message', (target, tags, msg, self) => {
                 syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + 'ussy';
                 console.log(word);
                 return syllables.join();
+            } else {
+                return word;
             }
         });
 

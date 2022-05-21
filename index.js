@@ -47,8 +47,8 @@ chatClient.on('message', (target, tags, msg, self) => {
         const tagger = new pos.Tagger();
         const newWords = words.map(word => {
 
-            const taggedWord = tagger.tag(word);
-            const tag = taggedWord[1];
+            const taggedWord = tagger.tag([word]);
+            const tag = taggedWord[0][1];
             console.log(tag);
             if (tag === 'N' && Math.floor(Math.random()*ussyfiedWordFrequencyFactor) === 0) {
                 const syllables = word.match(syllableRegex);

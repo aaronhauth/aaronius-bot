@@ -3,6 +3,7 @@ const https = require('https');
 const twitchPs = require('twitchps');
 const { runInNewContext } = require('vm');
 const tmi = require('tmi.js');
+const pos = requre('pos');
 const { client } = require('tmi.js');
 const app = express();
 const port = process.env.PORT
@@ -43,17 +44,22 @@ chatClient.on('message', (target, tags, msg, self) => {
     // if we hit the odds of ussyfying a word:
     if (Math.floor(Math.random()*messageFrequencyFactor) === 0) {
         const words = msg.split(' ');
+        const tagger = new pos.Tagger();
         const newWords = words.map(word => {
-            if (Math.floor(Math.random()*ussyfiedWordFrequencyFactor) === 0) {
+
+            const taggedWord = tagger.tag(word);
+            const tag = taggedWord[1];
+            if (tag === 'N' && Math.floor(Math.random()*ussyfiedWordFrequencyFactor) === 0) {
                 const syllables = word.match(syllableRegex);
-                if (syllables.length > 1) {
-                    console.log(syllables);
-                    syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + 'ussy';
-                    console.log(word);
-                    return syllables.join('');
-                } else {
-                    return word + 'ussy';
-                }
+
+                var ussyForm = tag[tag.length - 1] === 'S' ? 'ussies' : 'ussy';
+
+                console.log(syllables);
+                syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + ussyForm;
+                console.log(word);
+
+                return syllables.join('');
+
             } 
             else {
                 return word;

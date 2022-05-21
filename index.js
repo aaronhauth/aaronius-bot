@@ -46,6 +46,7 @@ chatClient.on('message', (target, tags, msg, self) => {
         const newWords = words.map(word => {
             if (Math.floor(Math.random()*ussyfiedWordFrequencyFactor) === 0) {
                 const syllables = word.match(syllableRegex);
+                console.log(syllables);
                 syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + 'ussy';
                 console.log(word);
                 return syllables.join();

@@ -48,6 +48,7 @@ chatClient.on('message', (target, tags, msg, self) => {
                 const syllables = word.match(syllableRegex);
                 syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + 'ussy';
                 word = syllables.join();
+                console.log(word);
             }
         }
         chatClient.say(target, words.join(' '));

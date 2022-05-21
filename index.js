@@ -33,7 +33,7 @@ const chatClient = new tmi.client(opts);
 chatClient.connect().catch(console.error);
 let channel = null;
 
-const messageFrequencyFactor = 5;
+const messageFrequencyFactor = 30;
 const ussyfiedWordFrequencyFactor = 4;
 
 // this chat client really only works in the context of a single channel (mine, at the moment)

@@ -43,15 +43,16 @@ chatClient.on('message', (target, tags, msg, self) => {
     // if we hit the odds of ussyfying a word:
     if (Math.floor(Math.random()*messageFrequencyFactor) === 0) {
         const words = msg.split(' ');
-        for (let word of words) {
+        const newWords = words.map(word => {
             if (Math.floor(Math.random()*ussyfiedWordFrequencyFactor) === 0) {
                 const syllables = word.match(syllableRegex);
                 syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + 'ussy';
                 word = syllables.join();
                 console.log(word);
             }
-        }
-        chatClient.say(target, words.join(' '));
+        });
+
+        chatClient.say(target, newWords.join(' '));
     } 
 
     // things to do when a message sends

@@ -55,6 +55,10 @@ chatClient.on('message', (target, tags, msg, self) => {
                 if (!syllables) return word;
                 var ussyForm = tag[tag.length - 1] === 'S' ? 'ussies' : 'ussy';
 
+                if (word[word.length-1].match(/[^a-zA-Z]/)) {
+                    ussyForm += word[word.length-1];
+                }
+
                 console.log(syllables);
                 syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + ussyForm;
                 console.log(word);

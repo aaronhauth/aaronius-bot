@@ -33,7 +33,7 @@ const chatClient = new tmi.client(opts);
 chatClient.connect().catch(console.error);
 let channel = null;
 
-const messageFrequencyFactor = 30;
+const messageFrequencyFactor = 2;
 const ussyfiedWordFrequencyFactor = 4;
 
 // this chat client really only works in the context of a single channel (mine, at the moment)
@@ -44,7 +44,36 @@ chatClient.on('message', (target, tags, msg, self) => {
     // if we hit the odds of ussyfying a word:
     if (Math.floor(Math.random()*messageFrequencyFactor) === 0) {
         const words = msg.split(' ');
+        const lexedWords = new pos.Lexer().lex(msg);
         const tagger = new pos.Tagger();
+        const taggedSentence = tagger.tag(lexedWords);
+        console.log(lexedWords);
+
+        const lexedWordConversion = taggedSentence.map(taggedWord => {
+            const tag = taggedWord[1];
+            const word = taggedWord[0];
+
+            if (tag[0] === 'N' && Math.floor(Math.random()*ussyfiedWordFrequencyFactor) === 0) {
+                const syllables = word.match(syllableRegex);
+                if (!syllables) return word;
+                var ussyForm = tag[tag.length - 1] === 'S' ? 'ussies' : 'ussy';
+
+                if (word[word.length-1].match(/[^a-zA-Z]/)) {
+                    ussyForm += word[word.length-1];
+                }
+
+                console.log(syllables);
+                syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + ussyForm;
+                console.log(word);
+
+                return syllables.join('');
+
+            } 
+            else {
+                return word;
+            }
+        }).join();
+
         const newWords = words.map(word => {
 
             const taggedWord = tagger.tag([word]);

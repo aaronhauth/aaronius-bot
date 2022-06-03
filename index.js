@@ -37,7 +37,7 @@ console.log(opts);
 // create a client with our options
 const chatClient = new tmi.client(opts);
 chatClient.connect().catch(console.error);
-let channel = null;
+let channel = process.env.channelUserName;
 
 const processor = unified()
   .use(retextEnglish)
@@ -58,8 +58,6 @@ chatClient.on('message', (target, tags, msg, self) => {
         chatClient.say(target, processResult.value);
     } 
 
-    // things to do when a message sends
-    if (!channel) channel = target;
 });
 
 

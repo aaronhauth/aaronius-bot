@@ -1,14 +1,20 @@
-const express = require('express');
-const https = require('https');
-const twitchPs = require('twitchps');
-const { runInNewContext } = require('vm');
-const tmi = require('tmi.js');
-const pos = require('pos');
-const { client } = require('tmi.js');
+import {unified} from 'unified'
+import * as stream from 'unified-stream'
+import retextEnglish from 'retext-english'
+import retextStringify from 'retext-stringify'
+import retextEmoji from 'retext-emoji'
+import retextPos from 'retext-pos';
+import ussyfy from './ussify.js';
+
+import express from 'express';
+import https from 'https';
+import * as tmi from 'tmi.js';
+import twitchPs from 'twitchps';
+
 const app = express();
 const port = process.env.PORT
-
-console.log(process.env);
+const ussyBotMessageFrequency = Number(process.env.ussyBotMessageFrequency);
+const ussifiedWordFrequency = Number(process.env.ussifiedWordFrequency);
 
 // chatbot options
 const opts = {
@@ -22,7 +28,7 @@ const opts = {
         password: 'oauth:' + process.env.chatBotToken
     },
     channels: [
-        process.env.userName
+        process.env.channelUserName
     ]
 }
 
@@ -33,8 +39,11 @@ const chatClient = new tmi.client(opts);
 chatClient.connect().catch(console.error);
 let channel = null;
 
-const messageFrequencyFactor = 2;
-const ussyfiedWordFrequencyFactor = 4;
+const processor = unified()
+  .use(retextEnglish)
+  .use(retextPos)
+  .use(ussyfy, {frequency: ussifiedWordFrequency})
+  .use(retextStringify);
 
 // this chat client really only works in the context of a single channel (mine, at the moment)
 // we initialize our chatTarget so that our redemption bot can have a channel to send our messages to. Otherwise, we don't care too much about this thing here.
@@ -42,78 +51,19 @@ chatClient.on('message', (target, tags, msg, self) => {
     if (self) return;
 
     // if we hit the odds of ussyfying a word:
-    if (Math.floor(Math.random()*messageFrequencyFactor) === 0) {
-        const words = msg.split(' ');
-        const lexedWords = new pos.Lexer().lex(msg);
-        const tagger = new pos.Tagger();
-        const taggedSentence = tagger.tag(lexedWords);
-        console.log(lexedWords);
+    if (Math.floor(Math.random()*ussyBotMessageFrequency) === 0) {
 
-        const lexedWordConversion = taggedSentence.map(taggedWord => {
-            const tag = taggedWord[1];
-            const word = taggedWord[0];
-
-            if (tag[0] === 'N' && Math.floor(Math.random()*ussyfiedWordFrequencyFactor) === 0) {
-                const syllables = word.match(syllableRegex);
-                if (!syllables) return word;
-                var ussyForm = tag[tag.length - 1] === 'S' ? 'ussies' : 'ussy';
-
-                if (word[word.length-1].match(/[^a-zA-Z]/)) {
-                    ussyForm += word[word.length-1];
-                }
-
-                console.log(syllables);
-                syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + ussyForm;
-                console.log(word);
-
-                return syllables.join('');
-
-            } 
-            else {
-                return word;
-            }
-        }).join();
-
-        const newWords = words.map(word => {
-
-            const taggedWord = tagger.tag([word]);
-            const tag = taggedWord[0][1];
-            console.log(tag);
-            if (tag[0] === 'N' && Math.floor(Math.random()*ussyfiedWordFrequencyFactor) === 0) {
-                const syllables = word.match(syllableRegex);
-                if (!syllables) return word;
-                var ussyForm = tag[tag.length - 1] === 'S' ? 'ussies' : 'ussy';
-
-                if (word[word.length-1].match(/[^a-zA-Z]/)) {
-                    ussyForm += word[word.length-1];
-                }
-
-                console.log(syllables);
-                syllables[syllables.length - 1] = syllables[syllables.length - 1][0] + ussyForm;
-                console.log(word);
-
-                return syllables.join('');
-
-            } 
-            else {
-                return word;
-            }
-        });
-
-        chatClient.say(target, newWords.join(' '));
+        // use the processing stream to ussify the message.
+        const processResult = processor.processSync(msg);
+        chatClient.say(target, processResult.value);
     } 
 
     // things to do when a message sends
     if (!channel) channel = target;
 });
 
-const syllableRegex = /[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]))?/gi;
-function syllabify(words) {
-    return words.match(syllableRegex);
-}
 
-
-let init_topics = [{topic: `video-playback.${process.env.userName}`}, {topic: `channel-points-channel-v1.${process.env.userId}`,  token: `${process.env.pubSubToken}`}];
+let init_topics = [{topic: `video-playback.${process.env.channelUserName}`}, {topic: `channel-points-channel-v1.${process.env.userId}`,  token: `${process.env.pubSubToken}`}];
 var ps = new twitchPs({reconnect: false, init_topics: init_topics, debug: true});
 console.log(process.env.PORT);
 

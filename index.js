@@ -1,11 +1,3 @@
-import {unified} from 'unified'
-import * as stream from 'unified-stream'
-import retextEnglish from 'retext-english'
-import retextStringify from 'retext-stringify'
-import retextEmoji from 'retext-emoji'
-import retextPos from 'retext-pos';
-import ussyfy from './ussify.js';
-
 import express from 'express';
 import https from 'https';
 import * as tmi from 'tmi.js';
@@ -13,8 +5,7 @@ import twitchPs from 'twitchps';
 
 const app = express();
 const port = process.env.PORT
-const ussyBotMessageFrequency = Number(process.env.ussyBotMessageFrequency);
-const ussifiedWordFrequency = Number(process.env.ussifiedWordFrequency);
+
 
 // chatbot options
 const opts = {
@@ -38,28 +29,6 @@ console.log(opts);
 const chatClient = new tmi.client(opts);
 chatClient.connect().catch(console.error);
 let channel = process.env.channelUserName;
-
-const processor = unified()
-  .use(retextEnglish)
-  .use(retextPos)
-  .use(ussyfy, {frequency: ussifiedWordFrequency})
-  .use(retextStringify);
-
-// this chat client really only works in the context of a single channel (mine, at the moment)
-// we initialize our chatTarget so that our redemption bot can have a channel to send our messages to. Otherwise, we don't care too much about this thing here.
-chatClient.on('message', (target, tags, msg, self) => {
-    if (self) return;
-
-    // if we hit the odds of ussyfying a word:
-    if (Math.floor(Math.random()*ussyBotMessageFrequency) === 0) {
-
-        // use the processing stream to ussify the message.
-        const processResult = processor.processSync(msg);
-        chatClient.say(target, processResult.value);
-    } 
-
-});
-
 
 let init_topics = [{topic: `video-playback.${process.env.channelUserName}`}, {topic: `channel-points-channel-v1.${process.env.userId}`,  token: `${process.env.pubSubToken}`}];
 var ps = new twitchPs({reconnect: false, init_topics: init_topics, debug: true});
@@ -94,7 +63,7 @@ app.get('/nice', (req, res) => {
         if (data.reward.id === '8bfd8f73-7068-422d-89e8-408fd3102d89') {
             console.log(`sending 'nice' from ${data.redemption.user.display_name}`);
             res.write('data: ' + `{"name": "${data.redemption.user.display_name}", "type": "nice"}` + '\n\n');
-        } else if (data.reward.id === 'c1e0dd1a-8f95-4807-98dc-c69364bc4872') {
+        } else if (data.reward.id === 'c10dd1a-8f95-4807-98dc-ec69364bc4872') {
             console.log(`sending 'VERY nice' from ${data.redemption.user.display_name}`);
             res.write('data: ' + `{"name": "${data.redemption.user.display_name}", "type": "veryNice"}` + '\n\n');
         }

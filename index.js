@@ -1,11 +1,36 @@
 import express from 'express';
 import https from 'https';
+import { StaticAuthProvider } from '@twurple/auth';
+import { ChatClient } from '@twurple/chat';
+
+
 import * as tmi from 'tmi.js';
 import twitchPs from 'twitchps';
 
 const app = express();
 const port = process.env.PORT
 
+const clientId = '64lpbdqq4o9x52bspi3jje00ag7o6d';
+const botAccessToken = '8vtxgocptpma1k05mgx63schg4fvbq';
+const botRefreshToken = 'iagr79mesnzpbn1s5jih89ctthwakslhyzlhrvr4m5y8ypxuib';
+
+async function main() {
+
+    const authProvider = new StaticAuthProvider(clientId, botAccessToken);
+    const chatClient = new ChatClient({ authProvider, channels: ['aaroniush'] });
+    await chatClient.connect();
+
+    chatClient.onMessage((channel, user, text) => {
+        if (text === '!ping') {
+            chatClient.say(channel, 'Pong!');
+        } else if (text === '!dice') {
+            const diceRoll = Math.floor(Math.random() * 6) + 1;
+            chatClient.say(channel, `@${user} rolled a ${diceRoll}`)
+        }
+    });
+}
+
+main();
 
 // chatbot options
 const opts = {

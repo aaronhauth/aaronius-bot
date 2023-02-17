@@ -11,6 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@twurple/api": "^5.3.4",
+    "@twurple/auth": "^5.3.4",
+    "@twurple/chat": "^5.3.4",
+    "@twurple/eventsub-ws": "^5.3.4",
     "express": "^4.17.1",
     "retext-emoji": "^8.1.0",
     "retext-english": "^4.1.0",

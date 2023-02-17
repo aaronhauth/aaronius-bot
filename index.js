@@ -15,9 +15,10 @@ const botAccessToken = '8vtxgocptpma1k05mgx63schg4fvbq';
 const botRefreshToken = 'iagr79mesnzpbn1s5jih89ctthwakslhyzlhrvr4m5y8ypxuib';
 
 async function main() {
-
+    console.log('in main')
     const authProvider = new StaticAuthProvider(clientId, botAccessToken);
     const chatClient = new ChatClient({ authProvider, channels: ['aaroniush'] });
+    console.log('connecting');
     await chatClient.connect();
 
     chatClient.onMessage((channel, user, text) => {

@@ -14,7 +14,7 @@ const clientId = '64lpbdqq4o9x52bspi3jje00ag7o6d';
 const botAccessToken = '8vtxgocptpma1k05mgx63schg4fvbq';
 const botRefreshToken = 'iagr79mesnzpbn1s5jih89ctthwakslhyzlhrvr4m5y8ypxuib';
 
-async function main() {
+
     console.log('in main')
     const authProvider = new StaticAuthProvider(clientId, botAccessToken);
     const chatClient = new ChatClient({ authProvider, channels: ['aaroniush'] });
@@ -29,9 +29,7 @@ async function main() {
             chatClient.say(channel, `@${user} rolled a ${diceRoll}`)
         }
     });
-}
 
-main();
 
 // // chatbot options
 // const opts = {

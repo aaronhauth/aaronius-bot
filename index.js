@@ -1,6 +1,6 @@
 import express from 'express';
 import https from 'https';
-import { StaticAuthProvider } from '@twurple/auth';
+import { RefreshingAuthProvider, StaticAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
 
 
@@ -12,11 +12,14 @@ const port = process.env.PORT
 
 const clientId = '64lpbdqq4o9x52bspi3jje00ag7o6d';
 const botAccessToken = '8vtxgocptpma1k05mgx63schg4fvbq';
+const botSecret = 'kms0af0s4pvn7h5fuxa5xxa6njm2xk';
 const botRefreshToken = 'iagr79mesnzpbn1s5jih89ctthwakslhyzlhrvr4m5y8ypxuib';
+
+const authProvider = new RefreshingAuthProvider({clientId: clientId, clientSecret, botSecret}, '8vtxgocptpma1k05mgx63schg4fvbq');
 
 
     console.log('in main')
-    const authProvider = new StaticAuthProvider(clientId, botAccessToken);
+    // const authProvider = new StaticAuthProvider(clientId, botAccessToken);
     const chatClient = new ChatClient({ authProvider, channels: ['aaroniush'] });
     console.log('connecting');
     await chatClient.connect();

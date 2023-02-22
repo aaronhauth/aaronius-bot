@@ -1,23 +1,37 @@
+import * as dotenv from 'dotenv' // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
+dotenv.config()
+console.log(process.env);
 import express from 'express';
 import https from 'https';
 import { RefreshingAuthProvider, StaticAuthProvider } from '@twurple/auth';
 import { ChatClient } from '@twurple/chat';
 import { PubSubClient } from '@twurple/pubsub';
+import { dbClient } from './db.js';
+
+
 
 const app = express();
 const port = process.env.PORT
 console.log(`set port to ${port}`);
-const clientId = '64lpbdqq4o9x52bspi3jje00ag7o6d';
+const clientId = process.env.aaroniusBotClientId;
 const botSecret = 'kms0af0s4pvn7h5fuxa5xxa6njm2xk';
 
-const botAccessToken = '8vtxgocptpma1k05mgx63schg4fvbq';
-const botRefreshToken = 'iagr79mesnzpbn1s5jih89ctthwakslhyzlhrvr4m5y8ypxuib';
+const db = new dbClient();
 
-const psUserAccessToken = 'gjhvhlvexeo2j5y7aby1q9vsmaoh3r';
-const psUserRefreshToken = 'vhcq9cgm91nk7x10bl9oomvtiakgzf5ymigqbxozpmrjm8nuii';
+const botTokenRow = await db.getAccessToken('botAccessToken');
+const botAccessToken = botTokenRow[0].access_token;
+const botRefreshToken = process.env.botRefreshToken;
 
-const authProvider = new RefreshingAuthProvider({clientId: clientId, clientSecret: botSecret}, {accessToken: botAccessToken, refreshToken: botRefreshToken, expiresIn:0, scope:['chat:read', 'chat:edit']});
-const psAuthProvider = new RefreshingAuthProvider({clientId: clientId, clientSecret: botSecret}, {accessToken: psUserAccessToken, refreshToken: psUserRefreshToken, expiresIn:0, scope:['channel:read:redemptions']});
+const psTokenRow = await db.getAccessToken('psAccessToken');
+const psUserAccessToken = psTokenRow[0].access_token;
+const psUserRefreshToken = process.env.psUserRefreshToken;
+
+const authProvider = new RefreshingAuthProvider({clientId: clientId, clientSecret: botSecret, onRefresh: async token => {
+    await db.updateAccessToken('botAccessToken', token.accessToken);
+}}, {accessToken: botAccessToken, refreshToken: botRefreshToken, expiresIn:0, scope:['chat:read', 'chat:edit']});
+const psAuthProvider = new RefreshingAuthProvider({clientId: clientId, clientSecret: botSecret, onRefresh: async token => {
+    await db.updateAccessToken('psAccessToken', token.accessToken);
+}}, {accessToken: psUserAccessToken, refreshToken: psUserRefreshToken, expiresIn:0, scope:['channel:read:redemptions']});
 
 
 console.log('in main')
@@ -26,8 +40,14 @@ const chatClient = new ChatClient({ authProvider, channels: ['aaroniush'] });
 console.log('connecting');
 await chatClient.connect();
 
+chatClient.onMessage(([channel, user, text, msg]) => {
+    if (text === '!ping') {
+        chatClient.say(channel, 'Pong!');
+    }
+})
+
 const ps = new PubSubClient();
-await ps.registerUserListener(psAuthProvider, 43658519);
+await ps.registerUserListener(psAuthProvider, process.env.userId);
 await ps.onRedemption(43658519, redemption => {
     console.log(`Redeemed ${redemption.rewardTitle} with id ${redemption.rewardId}`);
 

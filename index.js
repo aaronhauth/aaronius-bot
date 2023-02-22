@@ -18,10 +18,12 @@ const botSecret = 'kms0af0s4pvn7h5fuxa5xxa6njm2xk';
 
 const db = new dbClient();
 
+// init bot tokens
 const botTokenRow = await db.getAccessToken('botAccessToken');
 const botAccessToken = botTokenRow[0].access_token;
 const botRefreshToken = process.env.botRefreshToken;
 
+// init pubsub tokens
 const psTokenRow = await db.getAccessToken('psAccessToken');
 const psUserAccessToken = psTokenRow[0].access_token;
 const psUserRefreshToken = process.env.psUserRefreshToken;
@@ -35,14 +37,14 @@ const psAuthProvider = new RefreshingAuthProvider({clientId: clientId, clientSec
 
 
 console.log('in main')
-// const authProvider = new StaticAuthProvider(clientId, botAccessToken);
 const chatClient = new ChatClient({ authProvider, channels: ['aaroniush'] });
 console.log('connecting');
 await chatClient.connect();
 
-chatClient.onMessage(([channel, user, text, msg]) => {
-    if (text === '!ping') {
-        chatClient.say(channel, 'Pong!');
+chatClient.onMessage((channel, user, text) => {
+    console.log(text);
+    if (text.startsWith('!ping')){
+        chatClient.say(channel, 'pong!');
     }
 })
 
@@ -50,6 +52,7 @@ const ps = new PubSubClient();
 await ps.registerUserListener(psAuthProvider, process.env.userId);
 await ps.onRedemption(43658519, redemption => {
     console.log(`Redeemed ${redemption.rewardTitle} with id ${redemption.rewardId}`);
+
 
         if (redemption.rewardId === '68778a6a-14ee-4e10-a1e8-2f95094641d3') {
         console.log('starting request for a dad joke')
@@ -79,14 +82,14 @@ await ps.onRedemption(43658519, redemption => {
         // if we're able to send messages at the moment outside of the context of 
         let redeemMessage = `/me @${redemption.userDisplayName} redeemed ${redemption.rewardTitle}`;
         redeemMessage += redemption.rewardPrompt ? ` with message ${redemption.rewardPrompt}` : ".";
-        if (channel) {
-            chatClient.say(channel, redeemMessage);
+        if (redemption) {
+            chatClient.say('aaroniush', redeemMessage);
         }
     }
 
 
 })
-// await ps.listen(`channel-points-channel-v1.${process.env.userId}`, authProvider);
+
 console.log(ps.isConnected);
 
 app.get('/', (req, res) => res.send('Hello World'));

@@ -26,7 +26,7 @@ const botRefreshToken = process.env.botRefreshToken;
 // init pubsub tokens
 const psTokenRow = await db.getAccessToken('psAccessToken');
 const psUserAccessToken = psTokenRow[0].access_token;
-const psUserRefreshToken = process.env.psUserRefreshToken;b  
+const psUserRefreshToken = process.env.psUserRefreshToken;
 
 const authProvider = new RefreshingAuthProvider({clientId: clientId, clientSecret: botSecret, onRefresh: async token => {
     await db.updateAccessToken('botAccessToken', token.accessToken);

@@ -116,7 +116,7 @@ app.get('/nice', (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.flushHeaders(); // flush the headers to establish SSE with client
 
-    ps.onRedemption(redemption => {
+    ps.onRedemption(process.env.userId, redemption => {
         console.log('processing redemption ' + redemption.rewardTitle + ' with id ' + redemption.rewardId);
         if (redemption.rewardId === '8bfd8f73-7068-422d-89e8-408fd3102d89') {
             console.log(`sending 'nice' from ${redemption.userDisplayName}`);

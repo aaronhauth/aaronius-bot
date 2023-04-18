@@ -49,8 +49,8 @@ chatClient.onMessage((channel, user, text) => {
 })
 
 const ps = new PubSubClient();
-await ps.registerUserListener(psAuthProvider, process.env.userId);
-await ps.onRedemption(process.env.userId, redemption => {
+await ps.registerUserListener(psAuthProvider, "43658519");
+await ps.onRedemption("43658519", redemption => {
     console.log(`Redeemed ${redemption.rewardTitle} with id ${redemption.rewardId}`);
 
 
